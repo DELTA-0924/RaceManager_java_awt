@@ -35,4 +35,33 @@ public class SponsorDAO {
             statement.executeUpdate();
         }
     }
+    public void updateSponsor(int id,int column,String newValue) throws SQLException{
+        String columnName=getColumnName(column);
+        String query="update sponsors set"+columnName+"=? where id=?";
+        try(Connection connection=DatabaseConnection.getConnection();
+            PreparedStatement statement=connection.prepareStatement(query) ){
+                if(columnName.equals("budget") || columnName.equals("id")){
+                    statement.setDouble(1,Double.parseDouble(newValue));
+
+                }else{
+                    statement.setString(1,newValue);
+                }
+            statement.setInt(2,id);
+            statement.executeUpdate();
+        }
+    }
+    private String getColumnName(int column){
+        switch(column){
+            case 1:
+                return "id";
+            case 2:
+                return "name";
+            case 3:
+                return "industry";
+            case 4:
+                return "budget";
+            default:
+                return "";
+        }
+    }
 }

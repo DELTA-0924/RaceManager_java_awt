@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
 import io.reflectoring.demo.DataAccess.DAO.CarDAO;
@@ -88,6 +89,22 @@ public class CarPanel extends JPanel{
             
 
         });
+
+        table.getModel().addTableModelListener(e -> {
+        if (e.getType() == TableModelEvent.UPDATE) {
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+            Object newValue = table.getValueAt(row, column);
+           
+
+            // Получаем ID строки, чтобы знать, какую запись обновить в базе данных
+            int id = (int) table.getValueAt(row, 0); // Предположим, что ID находится в первом столбце
+
+            // Обновляем данные в базе данных
+            carDAO.updateCar(id, column+1, newValue.toString());
+        }
+});
+
         JPanel buttonPanel=new JPanel();
         buttonPanel.add(addCar);
         add(scrollPane,BorderLayout.CENTER);

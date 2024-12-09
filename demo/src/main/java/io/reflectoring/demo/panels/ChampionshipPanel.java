@@ -33,7 +33,7 @@ public class ChampionshipPanel extends JPanel{
     public ChampionshipPanel(){
         setLayout(new BorderLayout());
         champDAO=new ChampionshipsDAO();
-        tableModel = new DefaultTableModel(new String[]{"ID", "Name", "Season", "Date start", "Date end", "Date end", "position","winner id","prize money"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"ID", "Name", "Season", "Date start", "Date end", "Location","winner id","prize money"}, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         JPanel panelChamp=new JPanel(new GridLayout(6,7));

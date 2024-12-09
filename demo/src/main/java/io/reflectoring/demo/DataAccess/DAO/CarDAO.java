@@ -54,10 +54,7 @@ public class CarDAO {
     }
 
     public void addCar(Car car) throws SQLException,ParseException {
-        String query = "INSERT INTO cars ( model, brand, year,team_id, maintenance_cost, price) VALUES ( ?, ?, ?, ?, ?, ?)";
-        
-        
-        
+        String query = "INSERT INTO cars ( model, brand, year,team_id, maintenance_cost, price) VALUES ( ?, ?, ?, ?, ?, ?)";                        
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             
@@ -70,4 +67,42 @@ public class CarDAO {
             statement.executeUpdate();
         }
     }
+    public void updateCar(int id, int column, String newValue) {
+        String columnName = getColumnName(column);
+        String query = "UPDATE cars SET " + columnName + " = ? WHERE id = ?";
+        
+    
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+                if((!columnName.equals("brand"))&&(!columnName.equals("model")))   {             
+                    try{
+                        statement.setInt(1, Integer.parseInt(newValue));
+                    }catch(NumberFormatException e){
+                        statement.setDouble(1, Double.parseDouble(newValue));
+                    }
+                
+
+                }
+                else 
+                statement.setString(1, newValue);
+            statement.setInt(2, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // Метод для получения имени столбца по индексу
+    private String getColumnName(int column) {
+        switch (column) {
+            case 1: return "model";
+            case 2: return "brand";
+            case 3: return "year";
+            case 4: return "team_id";
+            case 5: return "price";
+            case 6: return "maintenance_cost";
+            default: return "";
+        }
+    }
+    
 }

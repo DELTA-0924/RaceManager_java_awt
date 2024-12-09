@@ -52,6 +52,31 @@ public class ChampionshipsDAO {
             statement.executeUpdate();
         }
     }
+    public void updateChampionship(int id,int column,String newValue)throws SQLException{
+        String columnName=getColumnName(column);
+        String query ="update championships set "+columnName+" =? where id=?";
+        try(Connection connection=DatabaseConnection.getConnection();
+        PreparedStatement statement =connection.prepareStatement(query)){
+            if(columnName.equals("prize_money"))
+                statement.setInt(1,Integer.parseInt(newValue));
+            else if(columnName.equals("end_date") || columnName.equals("start_date")){
+                SimpleDateFormat format=new SimpleDateFormat("yyyy-mm-dd");
+                try{
+                    Date tempDate=format.parse(newValue);
+                    java.sql.Date sqlDateDate=new java.sql.Date(tempDate.getTime());
+                    statement.setDate(1,sqlDateDate);                
+                }
+                catch(ParseException ex){
+                    ex.printStackTrace();
+                }                                
+            }
+            else {
+                statement.setString(1,newValue);                
+            }          
+            statement.setInt(2,id);
+            statement.executeUpdate();
+        }
+    }
     public void calculateChampionWinner(int id)throws SQLException{
         String functionCall = "SELECT  update_championship_winner(?)";
            try (Connection connection = DatabaseConnection.getConnection();
@@ -60,6 +85,26 @@ public class ChampionshipsDAO {
             statement.executeQuery();            
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    private String getColumnName(int column){
+        switch(column){
+            case 1:
+                return "id";
+            case 2:
+                return "name";
+            case 3:
+                return "season";
+            case 4:
+                return "start_date";
+            case 5:
+                return "end_date";
+            case 6:
+                return "location";
+            case 8:
+                return "prize money";
+            default:
+                return "";        
         }
     }
 }

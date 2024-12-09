@@ -50,4 +50,37 @@ public class TrackDAO {
                 statement.executeUpdate();
             }
     }
+    public void updateTrack(int id,int column,String newValue)throws SQLException{
+        String columnName=getColumnName(column);
+        String query="update tracks set"+columnName+"=? where id=?";
+        try(Connection connection=DatabaseConnection.getConnection();
+            PreparedStatement statement=connection.prepareStatement(query)){
+                if(columnName.equals("name")||columnName.equals("location")||columnName.equals("surface_type"))
+                    statement.setString(1,newValue);
+                else 
+                    statement.setInt(1,Integer.parseInt(newValue));
+            statement.setInt(2,id);
+            statement.executeUpdate();
+        }
+    }
+    private String getColumnName(int column){
+        switch(column){
+            case 1:
+                return "id";
+            case 2:
+                return "name";
+            case 3:
+                return "location";
+            case 4:
+                return "length_of";
+            case 5:
+                return "surface_type";
+            case 6:
+                return "turn_count";
+            case 7:
+                return "elevation_chanfe";
+            default:
+                return "";
+        }
+    }
 }

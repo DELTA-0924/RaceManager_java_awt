@@ -49,7 +49,22 @@ public class DriverDAO {
         }
         return drivers;
     }
+    public void updateDriver(int column,int id,String newValue) throws SQLException{
+        String columnName=getColumnName(column);
+        String query="update drivers set "+columnName+"=? where id=?";
+        try(Connection connection=DatabaseConnection.getConnection();
+            PreparedStatement statement=connection.prepareStatement(query)){
+            if(columnName.equals("id")||columnName.equals("age")|| columnName.equals("salary") || columnName.equals("team_id"))
+            {
+                statement.setInt(1,Integer.parseInt( newValue));
 
+            }else {
+                statement.setString(1,newValue);
+            }
+            statement.setInt(2,id);
+            statement.executeUpdate();
+        }
+    }
     public void addDriver(Driver driver) throws SQLException {
         String query = "INSERT INTO drivers (name, age, experience, team_id, special_skill, salary) VALUES ( ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseConnection.getConnection();
@@ -61,6 +76,26 @@ public class DriverDAO {
             statement.setString(5, driver.getSpecialSkill());
             statement.setDouble(6, driver.getSalary());
             statement.executeUpdate();
+        }
+    }
+    private String getColumnName(int column){
+        switch(column){
+            case 1:
+                return "id";
+            case 2:
+                return "name";
+            case 3:
+                return "age";                
+            case 4:
+                return "experience";
+            case 5:
+                return "team_id";
+            case 6:
+                return "special_skill";
+            case 7:
+                return "salary";
+            default:
+                return "";
         }
     }
 }
