@@ -63,7 +63,7 @@ public class NavigatorPanel extends JPanel {
                             nameField.getText(),
                             Integer.parseInt(ageField.getText()),
                             Integer.parseInt(experienceField.getText()),
-                            Integer.parseInt(String.valueOf(team.charAt(0))),                            
+                            util.getidCBX(team),                            
                             Integer.parseInt(salaryField.getText())
                     );
 

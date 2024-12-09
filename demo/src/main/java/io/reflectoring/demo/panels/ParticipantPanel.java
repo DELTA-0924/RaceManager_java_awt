@@ -49,11 +49,11 @@ public class ParticipantPanel extends JPanel{
         panelChamp.add(positionField);
 
         panelChamp.add(new Label("Lap time"));
-        lapTimeField=new JTextField();
+        lapTimeField=new JTextField("0.0");
         panelChamp.add(lapTimeField);
 
         panelChamp.add(new Label("Penalties"));
-        penaltiesField=new JTextField();
+        penaltiesField=new JTextField("0");
         panelChamp.add(penaltiesField);
 
         panelChamp.add(new Label("Points"));
@@ -87,16 +87,18 @@ public class ParticipantPanel extends JPanel{
             public void actionPerformed(ActionEvent e) {                
                 try {
                     RaceParticipants participant= new RaceParticipants(
-                        raceNameComboBox.getSelectedItem().toString().charAt(0),
-                        carModelComboBox.getSelectedItem().toString().charAt(0),
-                        driverNameComboBox.getSelectedItem().toString().charAt(0),
-                        navigatorComboBox.getSelectedItem().toString().charAt(0),     
+                       util.getidCBX(raceNameComboBox.getSelectedItem().toString()),
+                       util.getidCBX(carModelComboBox.getSelectedItem().toString()),
+                       util.getidCBX(driverNameComboBox.getSelectedItem().toString()),
+                       util.getidCBX(navigatorComboBox.getSelectedItem().toString()),
                         Integer.parseInt(positionField.getText()),Double.parseDouble(lapTimeField.getText()),
-                        Integer.parseInt(penaltiesField.getText()),Integer.parseInt(pointsField.getText()),
-                        teamNameComboBox.getSelectedItem().toString().charAt(0)                       
+                        Integer.parseInt(penaltiesField.getText()),0,
+                        util.getidCBX(teamNameComboBox.getSelectedItem().toString())
                     );
+                    System.out.println( "race id :"+Integer.parseInt( String.valueOf(raceNameComboBox.getSelectedItem().toString().charAt(0))));
                     participantDAO.addParticipants(participant);
                     JOptionPane.showMessageDialog(ParticipantPanel.this, "Participants added successfully!");
+                    refreshTable();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(ParticipantPanel.this, "Error adding participants: " + ex.getMessage());
                 }                                                
@@ -173,4 +175,5 @@ public class ParticipantPanel extends JPanel{
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
     }
+
 }

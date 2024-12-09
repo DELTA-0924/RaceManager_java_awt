@@ -65,7 +65,7 @@ public class DriverPanel extends JPanel {
                             nameField.getText(),
                             Integer.parseInt(ageField.getText()),
                             Integer.parseInt(experienceField.getText()),
-                            Integer.parseInt(String.valueOf(team.charAt(0))),
+                            util.getidCBX(teamIdField.getSelectedItem().toString()),
                             skillField.getText(),
                             Integer.parseInt(salaryField.getText())
                     );

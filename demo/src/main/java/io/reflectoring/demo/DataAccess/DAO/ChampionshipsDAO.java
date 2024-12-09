@@ -53,10 +53,11 @@ public class ChampionshipsDAO {
         }
     }
     public void calculateChampionWinner(int id)throws SQLException{
-        String functionCall = "SELECT  get_track_by_id(?)";
+        String functionCall = "SELECT  update_championship_winner(?)";
            try (Connection connection = DatabaseConnection.getConnection();
            PreparedStatement statement = connection.prepareStatement(functionCall)) {        
-            statement.setInt(1, id);                        
+            statement.setInt(1, id);            
+            statement.executeQuery();            
         } catch (SQLException e) {
             e.printStackTrace();
         }

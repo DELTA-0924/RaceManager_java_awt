@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 
 import io.reflectoring.demo.DataAccess.DAO.ChampionshipsDAO;
 import io.reflectoring.demo.models.Championship;
+import lombok.extern.log4j.Log4j;
 
 public class ChampionshipPanel extends JPanel{
     private JTable table;
@@ -75,9 +76,10 @@ public class ChampionshipPanel extends JPanel{
                             cLocationField.getText(),0,Integer.parseInt( cPrizeMoneyField.getText())
                     );
                     champDAO.addChampionship(champ);
-                    JOptionPane.showMessageDialog(ChampionshipPanel.this, "Sponsor added successfully!");
+                    JOptionPane.showMessageDialog(ChampionshipPanel.this, "Championship added successfully!");
+                    refreshTable();
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(ChampionshipPanel.this, "Error adding sponsor: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(ChampionshipPanel.this, "Error adding championship: " + ex.getMessage());
                 }
                 catch(ParseException ex){
                     ex.printStackTrace();
@@ -97,6 +99,7 @@ public class ChampionshipPanel extends JPanel{
                 
         
                 // Пример: вывод сообщения с результатом
+                System.out.println("championship id:\t"+input  +"in int parse:\t"+ Integer.parseInt(input));
                 try{
                     champDAO.calculateChampionWinner(Integer.parseInt(input));
                 }

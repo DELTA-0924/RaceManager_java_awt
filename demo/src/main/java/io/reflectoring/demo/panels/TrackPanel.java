@@ -55,7 +55,7 @@ public class TrackPanel extends JPanel{
                             Integer.parseInt(elevationField.getText())
                     );
                     trackDAO.addTracks(track);
-                    JOptionPane.showInputDialog(TrackPanel.this, "Success: ");
+                    JOptionPane.showInputDialog(TrackPanel.this, "Success: add track");
                     refreshData();
                 } catch (Exception ex) {
                     JOptionPane.showInputDialog(TrackPanel.this, "Error: " + ex.getMessage());

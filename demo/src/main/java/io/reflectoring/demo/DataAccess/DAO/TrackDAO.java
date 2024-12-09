@@ -22,6 +22,21 @@ public class TrackDAO {
         }
         return tracks;
     }
+    public List<Track>getTracksId() throws SQLException{
+        List<Track>tracks=new ArrayList<>();
+        String query="select id,name from Tracks";
+        try(Connection connection =DatabaseConnection.getConnection();
+            Statement statement=connection.createStatement();
+            ResultSet resultset=statement.executeQuery(query)){
+            while(resultset.next()){
+                tracks.add(new Track(resultset.getInt("id"),resultset.getString("name"),"",
+                                    0,"",
+                                    0,0
+                ));                
+            }
+        }
+        return tracks;
+    }
     public void addTracks(Track track)throws SQLException{
         String query="insert into tracks(name,location,length_of,surface_type,turn_count,elevation_change) values(?,?,?,?,?,?)";
         try(Connection connection=DatabaseConnection.getConnection();

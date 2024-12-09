@@ -2,10 +2,7 @@ package io.reflectoring.demo;
 
 import javax.swing.*;
 
-
-
-
-
+import io.reflectoring.demo.panels.CarPanel;
 import io.reflectoring.demo.panels.ChampionshipPanel;
 import io.reflectoring.demo.panels.DriverPanel;
 import io.reflectoring.demo.panels.NavigatorPanel;
@@ -26,15 +23,15 @@ public class RaceManagerApp {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         JTabbedPane tabbedPane = new JTabbedPane();                                
-        tabbedPane.addTab("Races", new RacePanel());
         tabbedPane.addTab("Championships", new ChampionshipPanel());
+        tabbedPane.addTab("Track", new TrackPanel());   
+        tabbedPane.addTab("Races", new RacePanel());
+        tabbedPane.addTab("Sponsor", new SponsorPanel());   
+        tabbedPane.addTab("Team", new TeamPanel());                              
+        tabbedPane.addTab("Cars", new CarPanel());   
         tabbedPane.addTab("Drivers", new DriverPanel());
         tabbedPane.addTab("Navigators", new NavigatorPanel());                              
-        tabbedPane.addTab("Team", new TeamPanel());                              
-        tabbedPane.addTab("Sponsor", new SponsorPanel());   
-        tabbedPane.addTab("Track", new TrackPanel());   
         tabbedPane.addTab("Participants", new ParticipantPanel());   
-        
         frame.add(tabbedPane);
         frame.setVisible(true);
     }

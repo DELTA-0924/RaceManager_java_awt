@@ -1,7 +1,7 @@
 package io.reflectoring.demo.DataAccess.DAO;
 import java.sql.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,19 +54,19 @@ public class CarDAO {
     }
 
     public void addCar(Car car) throws SQLException,ParseException {
-        String query = "INSERT INTO cars (id, model, brand, year,team_id, maintenance_cost, price) VALUES (?, ?, ?, ?, ?, ?, ?,)";
-        SimpleDateFormat format=new SimpleDateFormat("yyyy-mm-dd");
-        java.util.Date year=format.parse(car.getYear());
-        Date sqlYear=new Date(year.getTime());
+        String query = "INSERT INTO cars ( model, brand, year,team_id, maintenance_cost, price) VALUES ( ?, ?, ?, ?, ?, ?)";
+        
+        
+        
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, car.getId());
-            statement.setString(2, car.getModel());
-            statement.setString(3, car.getBrand());
-            statement.setDate(4, sqlYear);            
-            statement.setInt(5, car.getTeam_id());
-            statement.setDouble(6, car.getMaintenance_cost());
-            statement.setDouble(7, car.getPrice());
+            
+            statement.setString(1, car.getModel());
+            statement.setString(2, car.getBrand());
+            statement.setInt(3, Integer.parseInt(car.getYear()));            
+            statement.setInt(4, car.getTeam_id());
+            statement.setDouble(5, car.getMaintenance_cost());
+            statement.setDouble(6, car.getPrice());
             statement.executeUpdate();
         }
     }

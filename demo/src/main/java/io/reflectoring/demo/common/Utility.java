@@ -7,17 +7,21 @@ import java.util.ArrayList;
 import javax.swing.JComboBox;
 
 import io.reflectoring.demo.DataAccess.DAO.CarDAO;
+import io.reflectoring.demo.DataAccess.DAO.ChampionshipsDAO;
 import io.reflectoring.demo.DataAccess.DAO.DriverDAO;
 import io.reflectoring.demo.DataAccess.DAO.NavigatorDAO;
 import io.reflectoring.demo.DataAccess.DAO.RaceDAO;
 import io.reflectoring.demo.DataAccess.DAO.SponsorDAO;
 import io.reflectoring.demo.DataAccess.DAO.TeamDAO;
+import io.reflectoring.demo.DataAccess.DAO.TrackDAO;
 import io.reflectoring.demo.contact.CarTeam;
 import io.reflectoring.demo.contact.DriverTeam;
 import io.reflectoring.demo.contact.NavigatorTeam;
 import io.reflectoring.demo.contact.RaceChampTrack;
+import io.reflectoring.demo.models.Championship;
 import io.reflectoring.demo.models.Sponsor;
 import io.reflectoring.demo.models.Team;
+import io.reflectoring.demo.models.Track;
 
 public class Utility {
     TeamDAO teamDAO=new TeamDAO();
@@ -26,6 +30,8 @@ public class Utility {
     NavigatorDAO navigatorDAO=new NavigatorDAO();
     RaceDAO raceDAo=new RaceDAO();
     CarDAO carDAO =new CarDAO();
+    TrackDAO trackDAO=new TrackDAO();
+    ChampionshipsDAO champDAO=new ChampionshipsDAO();
     public  JComboBox<String> loadTeams() {
         
         JComboBox<String> teamComboBox = new JComboBox<>();
@@ -90,7 +96,7 @@ public class Utility {
     public JComboBox<String>loadRace(){
         JComboBox<String> navigatorComboBox = new JComboBox<>();
         try {
-            java.util.List<RaceChampTrack> races = raceDAo.getRaces();
+            java.util.List<RaceChampTrack> races = raceDAo.getRacesId();
             for (RaceChampTrack race : races) {           
                 navigatorComboBox.addItem(race.getId() + " - " + race.getName());
             }
@@ -98,5 +104,33 @@ public class Utility {
             ex.printStackTrace();
         }
         return navigatorComboBox;           
+    }
+    public JComboBox<String>loadTracks(){
+        JComboBox<String> trackComboBox = new JComboBox<>();
+        try {
+            java.util.List<Track> tracks = trackDAO.getTracksId();
+            for (Track track : tracks) {           
+                trackComboBox.addItem(track.getId() + " - " + track.getName());
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return trackComboBox;   
+    }
+    public JComboBox<String>loadChampionships(){
+        JComboBox<String> champComboBox = new JComboBox<>();
+        try {
+            java.util.List<Championship> champs = champDAO.getChampionships();
+            for (Championship champ : champs) {           
+                champComboBox.addItem(champ.getId() + " - " + champ.getName()+" - "+champ.getStartDate() +" - "+champ.getEndDate());
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return champComboBox; 
+    }
+     public int getidCBX(String str){
+        int id= Integer.parseInt(String.valueOf(str.substring(0, str.indexOf("-")-1))); 
+        return id;
     }
 }

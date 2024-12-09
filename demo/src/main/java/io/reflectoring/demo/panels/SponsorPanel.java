@@ -58,6 +58,7 @@ public class SponsorPanel extends JPanel{
                     );
                     sponsorDAO.addSponsor(sponsor);
                     JOptionPane.showMessageDialog(SponsorPanel.this, "Sponsor added successfully!");
+                    refreshTable();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(SponsorPanel.this, "Error adding sponsor: " + ex.getMessage());
                 }                                                

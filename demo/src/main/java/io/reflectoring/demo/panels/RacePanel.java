@@ -3,6 +3,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import io.reflectoring.demo.DataAccess.DAO.RaceDAO;
+import io.reflectoring.demo.common.Utility;
 import io.reflectoring.demo.contact.RaceChampTrack;
 import io.reflectoring.demo.models.Race;
 
@@ -15,11 +16,11 @@ public class RacePanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JTextField nameField, typeField, dateField, trackIdField, championshipIdField, weatherField;
-
+    private Utility util;
     public RacePanel() {
         setLayout(new BorderLayout());
-
-        // Таблица
+        util=new Utility();
+        // Таблица  
         tableModel = new DefaultTableModel(new String[]{"ID", "Name", "Type", "Date", "Track ID", "Championship ID", "Weather"}, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
@@ -39,12 +40,12 @@ public class RacePanel extends JPanel {
         inputPanel.add(dateField);
 
         inputPanel.add(new JLabel("Track ID:"));
-        trackIdField = new JTextField();
-        inputPanel.add(trackIdField);
+        JComboBox<String> trackComboBox=util.loadTracks();
+        inputPanel.add(trackComboBox);
 
         inputPanel.add(new JLabel("Championship ID:"));
-        championshipIdField = new JTextField();
-        inputPanel.add(championshipIdField);
+        JComboBox<String>champComboBox=util.loadChampionships();
+        inputPanel.add(champComboBox);
 
         inputPanel.add(new JLabel("Weather Conditions:"));
         weatherField = new JTextField();
@@ -61,8 +62,8 @@ public class RacePanel extends JPanel {
                             nameField.getText(),
                             typeField.getText(),
                             java.sql.Date.valueOf(dateField.getText()),
-                            Integer.parseInt(trackIdField.getText()),
-                            Integer.parseInt(championshipIdField.getText()),
+                            util.getidCBX(trackComboBox.getSelectedItem().toString()),
+                            util.getidCBX(champComboBox.getSelectedItem().toString()),
                             weatherField.getText()
                     );
 
@@ -73,6 +74,7 @@ public class RacePanel extends JPanel {
                     refreshTable();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(RacePanel.this, "Error: " + ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
         });

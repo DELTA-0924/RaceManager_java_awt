@@ -110,7 +110,9 @@ public class TeamPanel extends JPanel{
                 String team =comboBoxTeam.getSelectedItem().toString();
                 String sponsor= comboBoxSponsor.getSelectedItem().toString();
                 String budget=contribution.getText();                             
-                teamSponsorDAO.setTeamSponsor(Integer.parseInt(String.valueOf(team.charAt(0))),Integer.parseInt(String.valueOf(sponsor.charAt(0))),Integer.parseInt(budget));
+                teamSponsorDAO.setTeamSponsor(util.getidCBX(team),util.getidCBX(sponsor),Integer.parseInt(budget));
+                JOptionPane.showMessageDialog(tsFrame, "Succes adding teams: ");
+                refreshTable();
             }catch(SQLException ex){
                 JOptionPane.showMessageDialog(tsFrame, "Error fetching teams: " + ex.getMessage());
             }
