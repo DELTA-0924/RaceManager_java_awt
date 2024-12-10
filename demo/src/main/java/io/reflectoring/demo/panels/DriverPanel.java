@@ -1,5 +1,6 @@
 package io.reflectoring.demo.panels;
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
 import io.reflectoring.demo.DataAccess.DAO.DriverDAO;
@@ -10,6 +11,7 @@ import io.reflectoring.demo.models.Driver;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.List;
 
 public class DriverPanel extends JPanel {
@@ -81,7 +83,40 @@ public class DriverPanel extends JPanel {
             }
         });
 
-        JPanel buttonPanel = new JPanel();
+            table.getModel().addTableModelListener(e->{
+            if(e.getType()==TableModelEvent.UPDATE )
+            {
+                try{
+                int row=e.getFirstRow();
+                int col=e.getColumn();
+                Object newValue=table.getValueAt(row, col);
+                int id=(int)table.getValueAt(row,0);
+                
+                driverDAO.updateDriver(id, col+1,newValue.toString());
+                }catch(SQLException ex ){
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        JButton deleteButton = new JButton("Delete");
+
+        deleteButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                int id = (int) table.getValueAt(selectedRow, 0); // Получаем ID выбранной строки
+
+                // Удаляем запись из базы данных
+                driverDAO.deleteFromDatabase(id);
+
+                // Удаляем строку из модели
+                tableModel.removeRow(selectedRow);
+            }
+        });
+
+
+        JPanel buttonPanel=new JPanel();
+        buttonPanel.add(deleteButton);
         buttonPanel.add(addButton);
 
         add(scrollPane, BorderLayout.CENTER);

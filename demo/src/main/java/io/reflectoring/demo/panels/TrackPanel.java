@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -13,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
 import io.reflectoring.demo.DataAccess.DAO.TrackDAO;
@@ -62,8 +64,40 @@ public class TrackPanel extends JPanel{
                 }                      
             }
 
-        });                
-        JPanel buttonPanel = new JPanel();
+        });          
+        trackTable.getModel().addTableModelListener(e->{
+            if(e.getType()==TableModelEvent.UPDATE )
+            {
+                try{
+                int row=e.getFirstRow();
+                int col=e.getColumn();
+                Object newValue=trackTable.getValueAt(row, col);
+                int id=(int)trackTable.getValueAt(row,0);
+                
+                trackDAO.updateTrack(id, col+1,newValue.toString());
+                }catch(SQLException ex ){
+                    ex.printStackTrace();
+                }
+            }
+        });      
+        JButton deleteButton = new JButton("Delete");
+
+        deleteButton.addActionListener(e -> {
+            int selectedRow = trackTable.getSelectedRow();
+            if (selectedRow != -1) {
+                int id = (int) trackTable.getValueAt(selectedRow, 0); // Получаем ID выбранной строки
+
+                // Удаляем запись из базы данных
+                trackDAO.deleteFromDatabase(id);
+
+                // Удаляем строку из модели
+                tableModel.removeRow(selectedRow);
+            }
+        });
+
+
+        JPanel buttonPanel=new JPanel();
+        buttonPanel.add(deleteButton);
         buttonPanel.add(addButton);        
         
         add(scrollPane,BorderLayout.CENTER);

@@ -72,7 +72,7 @@ public class RaceDAO {
             statement.executeUpdate();
         }
     }
-    private void updateRace(String newValue,int column,int id)throws SQLException{
+    public void updateRace(int id,int column,String newValue)throws SQLException{
         String columnName=getColumnName(column);
         String query="update race set "+columnName+"=? where id=?";
         try(Connection connection=DatabaseConnection.getConnection();
@@ -97,6 +97,18 @@ public class RaceDAO {
             statement.setInt(2,id);
             statement.executeUpdate();
         }   
+    }
+    public void deleteFromDatabase(int id) {
+        String query = "DELETE FROM races WHERE id = ?";
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+    
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     private String getColumnName(int column){
         switch(column){

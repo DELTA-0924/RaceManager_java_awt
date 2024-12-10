@@ -37,7 +37,7 @@ public class TeamDAO {
     }
     public void updateTeam(int id,int column,String newValue)throws SQLException{
         String columnName=getColumName(column);
-        String query="update teams set"+columnName+"=? where id=?";
+        String query="update teams set "+columnName+"=? where id=?";
         try(Connection connection=DatabaseConnection.getConnection();
             PreparedStatement statement =connection.prepareStatement(query)){
             if(columnName.equals("budget")||columnName.equals("id"))
@@ -46,6 +46,18 @@ public class TeamDAO {
                 statement.setString(1,newValue)                ;
             statement.setInt(2,id);
             statement.executeUpdate();        }
+    }
+    public void deleteFromDatabase(int id) {
+        String query = "DELETE FROM teams WHERE id = ?";
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+    
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     private String getColumName(int column){
         switch(column){

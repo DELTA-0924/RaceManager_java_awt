@@ -1,5 +1,6 @@
 package io.reflectoring.demo.panels;
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
 import io.reflectoring.demo.DataAccess.DAO.RaceDAO;
@@ -10,6 +11,7 @@ import io.reflectoring.demo.models.Race;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.List;
 
 public class RacePanel extends JPanel {
@@ -17,7 +19,9 @@ public class RacePanel extends JPanel {
     private DefaultTableModel tableModel;
     private JTextField nameField, typeField, dateField, trackIdField, championshipIdField, weatherField;
     private Utility util;
+    RaceDAO raceDAO;
     public RacePanel() {
+        raceDAO = new RaceDAO();
         setLayout(new BorderLayout());
         util=new Utility();
         // Таблица  
@@ -67,7 +71,7 @@ public class RacePanel extends JPanel {
                             weatherField.getText()
                     );
 
-                    RaceDAO raceDAO = new RaceDAO();
+                
                     raceDAO.addRace(race);
 
                     // Обновить таблицу
@@ -78,8 +82,42 @@ public class RacePanel extends JPanel {
                 }
             }
         });
+            table.getModel().addTableModelListener(e->{
+            if(e.getType()==TableModelEvent.UPDATE )
+            {
+                try{
+                    int row=e.getFirstRow();
+                    int col=e.getColumn();
+                    Object newValue=table.getValueAt(row, col);
+                    int id=(int)table.getValueAt(row,0);
+                    
+                    raceDAO.updateRace(id, col+1,newValue.toString());
+                    }catch(SQLException ex){
+                        JOptionPane.showMessageDialog(null, 
+                        ex.getMessage(), 
+                        "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    }
+                
+            }
+        });
+        JButton deleteButton = new JButton("Delete");
 
-        JPanel buttonPanel = new JPanel();
+        deleteButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                int id = (int) table.getValueAt(selectedRow, 0); // Получаем ID выбранной строки
+
+                // Удаляем запись из базы данных
+                raceDAO.deleteFromDatabase(id);
+
+                // Удаляем строку из модели
+                tableModel.removeRow(selectedRow);
+            }
+        });
+
+
+        JPanel buttonPanel=new JPanel();
+        buttonPanel.add(deleteButton);
         buttonPanel.add(addButton);
 
         add(scrollPane, BorderLayout.CENTER);

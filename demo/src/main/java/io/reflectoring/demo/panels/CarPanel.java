@@ -67,6 +67,7 @@ public class CarPanel extends JPanel{
         panelCar.add(teamComboBox);
         
         JButton addCar=new JButton("Add car");
+        
         addCar.addActionListener(new ActionListener(){
 
             @Override
@@ -104,9 +105,26 @@ public class CarPanel extends JPanel{
             carDAO.updateCar(id, column+1, newValue.toString());
         }
 });
+        JButton deleteButton = new JButton("Delete");
+
+        deleteButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                int id = (int) table.getValueAt(selectedRow, 0); // Получаем ID выбранной строки
+
+                // Удаляем запись из базы данных
+                carDAO.deleteFromDatabase(id);
+
+                // Удаляем строку из модели
+                tableModel.removeRow(selectedRow);
+            }
+        });
+
 
         JPanel buttonPanel=new JPanel();
+        buttonPanel.add(deleteButton);
         buttonPanel.add(addCar);
+        
         add(scrollPane,BorderLayout.CENTER);
         add(panelCar,BorderLayout.NORTH);
         add(buttonPanel,BorderLayout.SOUTH);

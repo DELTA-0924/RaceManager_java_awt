@@ -52,7 +52,7 @@ public class TrackDAO {
     }
     public void updateTrack(int id,int column,String newValue)throws SQLException{
         String columnName=getColumnName(column);
-        String query="update tracks set"+columnName+"=? where id=?";
+        String query="update tracks set "+columnName+"=? where id=?";
         try(Connection connection=DatabaseConnection.getConnection();
             PreparedStatement statement=connection.prepareStatement(query)){
                 if(columnName.equals("name")||columnName.equals("location")||columnName.equals("surface_type"))
@@ -61,6 +61,18 @@ public class TrackDAO {
                     statement.setInt(1,Integer.parseInt(newValue));
             statement.setInt(2,id);
             statement.executeUpdate();
+        }
+    }
+    public void deleteFromDatabase(int id) {
+        String query = "DELETE FROM tracks WHERE id = ?";
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+    
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
     private String getColumnName(int column){
@@ -78,7 +90,7 @@ public class TrackDAO {
             case 6:
                 return "turn_count";
             case 7:
-                return "elevation_chanfe";
+                return "elevation_change";
             default:
                 return "";
         }

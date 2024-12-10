@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
 import io.reflectoring.demo.DataAccess.DAO.RaceParticipantsDAO;
@@ -107,7 +108,23 @@ public class ParticipantPanel extends JPanel{
 
      
 
-        JPanel buttonPanel=new JPanel();
+          JButton deleteButton = new JButton("Delete");
+
+          deleteButton.addActionListener(e -> {
+              int selectedRow = table.getSelectedRow();
+              if (selectedRow != -1) {
+                  int Id = (int) table.getValueAt(selectedRow, 0); // Получаем ID выбранной строки
+       
+                  participantDAO.deleteFromDatabase(Id);
+  
+                  // Удаляем строку из модели
+                  tableModel.removeRow(selectedRow);
+              }
+          });
+  
+  
+          JPanel buttonPanel=new JPanel();
+          buttonPanel.add(deleteButton);
         buttonPanel.add(addTeam);
         
         add(scrollPane,BorderLayout.CENTER);
@@ -148,6 +165,23 @@ public class ParticipantPanel extends JPanel{
                         "Ошибка", JOptionPane.WARNING_MESSAGE);
                 }
             }
+        });
+        table.getModel().addTableModelListener(e->{
+            if(e.getType()==TableModelEvent.UPDATE)
+                {
+                    try{                    
+                    int row=e.getFirstRow();
+                    int col=e.getColumn();
+                    Object newValue=table.getValueAt(row, col);
+                    int id=(int)table.getValueAt(row,0);;                    
+                    participantDAO.updateRaceParticipants(id,col+1,newValue.toString());
+                    }
+                    catch(SQLException ex){
+                        JOptionPane.showMessageDialog(null, 
+                        ex.getMessage(), 
+                        "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
         });
         refreshTable();
     }

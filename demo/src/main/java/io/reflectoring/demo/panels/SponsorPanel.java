@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
 import io.reflectoring.demo.DataAccess.DAO.SponsorDAO;
@@ -64,7 +65,39 @@ public class SponsorPanel extends JPanel{
                 }                                                
             }
           });
+                   table.getModel().addTableModelListener(e->{
+            if(e.getType()==TableModelEvent.UPDATE )
+            {
+                try{
+                int row=e.getFirstRow();
+                int col=e.getColumn();
+                Object newValue=table.getValueAt(row, col);
+                int id=(int)table.getValueAt(row,0);
+                
+                sponsorDAO.updateSponsor(id, col+1,newValue.toString());
+                }catch(SQLException ex ){
+                    ex.printStackTrace();
+                }
+            }
+        });
+        JButton deleteButton = new JButton("Delete");
+
+        deleteButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                int id = (int) table.getValueAt(selectedRow, 0); // Получаем ID выбранной строки
+
+                // Удаляем запись из базы данных
+                sponsorDAO.deleteFromDatabase(id);
+
+                // Удаляем строку из модели
+                tableModel.removeRow(selectedRow);
+            }
+        });
+
+
         JPanel buttonPanel=new JPanel();
+        buttonPanel.add(deleteButton);
         buttonPanel.add(addTeam);
         add(scrollPane,BorderLayout.CENTER);
         add(panelChamp,BorderLayout.NORTH);

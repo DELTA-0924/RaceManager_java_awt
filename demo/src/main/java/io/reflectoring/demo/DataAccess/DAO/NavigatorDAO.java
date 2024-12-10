@@ -62,12 +62,12 @@ public class NavigatorDAO {
             statement.executeUpdate();
         }
     }
-    public void updateDriver(int column,int id,String newValue) throws SQLException{
+    public void updateDriver(int id,int column,String newValue)throws SQLException{
         String columnName=getColumnName(column);
         String query="update navigators set "+columnName+"=? where id=?";
         try(Connection connection=DatabaseConnection.getConnection();
             PreparedStatement statement=connection.prepareStatement(query)){
-            if(columnName.equals("id")||columnName.equals("age")|| columnName.equals("salary") || columnName.equals("team_id"))
+            if(columnName.equals("experience")||columnName.equals("id")||columnName.equals("age")|| columnName.equals("salary") || columnName.equals("team_id"))
             {
                 statement.setInt(1,Integer.parseInt( newValue));
 
@@ -76,6 +76,18 @@ public class NavigatorDAO {
             }
             statement.setInt(2,id);
             statement.executeUpdate();
+        }
+    }
+    public void deleteFromDatabase(int id) {
+        String query = "DELETE FROM navigators WHERE id = ?";
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+    
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
     private String getColumnName(int column){

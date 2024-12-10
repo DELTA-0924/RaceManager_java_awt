@@ -50,6 +50,18 @@ public class SponsorDAO {
             statement.executeUpdate();
         }
     }
+    public void deleteFromDatabase(int id) {
+        String query = "DELETE FROM sponsors WHERE id = ?";
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+    
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     private String getColumnName(int column){
         switch(column){
             case 1:

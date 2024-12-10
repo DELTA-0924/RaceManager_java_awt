@@ -23,8 +23,8 @@ public class CarDAO {
                         resultSet.getString("brand"),
                         resultSet.getString("year"),                        
                         resultSet.getString("teamname"),
-                        resultSet.getDouble("maintenance_cost"),
-                        resultSet.getDouble("price")
+                        resultSet.getDouble("price"),
+                        resultSet.getDouble("maintenance_cost")
                 ));
             }
         }
@@ -91,7 +91,18 @@ public class CarDAO {
             e.printStackTrace();
         }
     }
+    public void deleteFromDatabase(int id) {
+        String query = "DELETE FROM cars WHERE id = ?";
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
     
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     // Метод для получения имени столбца по индексу
     private String getColumnName(int column) {
         switch (column) {
